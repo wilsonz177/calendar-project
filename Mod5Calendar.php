@@ -12,7 +12,7 @@
  *
  *function for finding end date of a month: https://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
  -->
-    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 
 <body><div id="main">
@@ -20,9 +20,9 @@
 <h1>Welcome to your Janky Calendar</h1>
 <div id="calendarBorder">
     <header>
-    <button id='back'>«</button>
-    <h2 id='month'>July 2013</h2>
-    <button id='fwd'>»</button>
+    <button class='fwdbackbutton' id='back'>«</button>
+    <h2 id='calendarTitle'>July 2013</h2>
+    <button class='fwdbackbutton' id='fwd'>»</button>
   </header>
 <table class="calendar">
     <col class="weekend">
@@ -97,29 +97,44 @@
   </tbody>
 </table>
 </div>
+<br>
 
+<div>
+<h3> Events for <span class='formDate'></span></h3>
+<ul>
+      
+</ul>
+</div>
+
+
+<br>
 <div id='eventcreator'>
-    <form id='eventform'>
-        Title: <input type ="text" />
-        Description: <textarea rows="4" cols="50" name="comment" form="eventform"></textarea>
-        Hour: <select>
+      <h3>Enter an event for <span class='formDate'></span></h3>
+   
+        Title: <input type ="text" id ='eventTitle'/>
+        Hour: <select id='eventHour'>
             <?php
              for($i = 0; $i < 24; $i++){
                 printf("<option value=%s> %s </option>", $i, $i);
              }
             ?>
         </select>
-        Minute: <select>
+        Minute: <select id='eventMinute'>
             <?php
              for($i = 0; $i<60; $i+= 15){
                   printf("<option value=%s> %s </option>", $i, $i);
              }
             ?>
         </select>
-    </form>
+        
+        <button type="button" id='addeventbutton'>Submit</button>
+    
 </div>
 
+
+
 <script type="text/javascript" src="CalendarScript.js"></script>
+
  
 </div></body>
 </html>
