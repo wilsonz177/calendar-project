@@ -7,7 +7,10 @@ document.addEventListener('DOMContentLoaded', setup, false);
     var month = convertNumToMonth(numericMonth);
     var day = current.getDate();
     var year = current.getFullYear();
+    var selectedDay = day;
     console.log(numericMonth);
+    var formDate = document.getElementsByClassName('formDate');
+    
     
     function moveFwd(){
       document.getElementById('selected').removeAttribute('id');
@@ -42,6 +45,8 @@ document.addEventListener('DOMContentLoaded', setup, false);
       setup();   
     }
     
+    
+    // FILLS THE CALENDAR DATES
     function setup(){
         //console.log(current);
         //
@@ -54,7 +59,7 @@ document.addEventListener('DOMContentLoaded', setup, false);
         //console.log(d);
         //skip days from 0-6
         //console.log(skipdays);
-        document.getElementById('month').innerHTML = month + "  " + year;
+        document.getElementById('calendarTitle').innerHTML = month + "  " + year;
         
         //FIND END DATE
         var enddate = current.monthDays();
@@ -77,6 +82,10 @@ document.addEventListener('DOMContentLoaded', setup, false);
             array[i].innerHTML = i-skipdays;
             if(i-skipdays === day){
                   array[i].setAttribute('id', 'selected');
+                  selectedDay = day;
+                  formDate[0].innerHTML = month + " " + selectedDay + " " + year;
+                  formDate[1].innerHTML = month + " " + selectedDay + " " + year;
+                  getEventAjax();
             }
             array[i].addEventListener('click', displayDay, false);
         }
@@ -88,51 +97,133 @@ document.addEventListener('DOMContentLoaded', setup, false);
             return d.getDate();
       };
     
+    //converts the numeric month 0-11 to the name of the month
     function convertNumToMonth(num_month){
-        var month;
+        var answer;
         switch(num_month){
             case 0:
-                month = 'January';
+                answer = 'January';
                 break;
             case 1:
-                month = 'February';
+                answer = 'February';
                 break;
             case 2:
-                month = 'March';
+                answer = 'March';
                 break;
            case 3:
-                month = 'April';
+                answer = 'April';
                 break;
             case 4:
-                month = 'May';
+                answer = 'May';
                 break;
             case 5:
-                month = 'June';
+                answer = 'June';
                 break;
             case 6:
-                month = 'July';
+                answer = 'July';
                 break;
             case 7:
-                month = 'August';
+                answer = 'August';
                 break;
             case 8:
-                month = 'September';
+                answer = 'September';
                 break;
             case 9:
-                month = 'October';
+                answer = 'October';
                 break;
             case 10:
-                month = 'November';
+                answer = 'November';
                 break;
             case 11:
-                month = 'December';
+                answer = 'December';
                 break;
         }
-        return month;
+        return answer;
     }
     
+    
+    //function to run when a day is clicked
     function displayDay(){
         document.getElementById('selected').removeAttribute('id');
         event.target.setAttribute('id', 'selected');
         
+        var array = document.getElementsByTagName('td');
+        var d = new Date(year, numericMonth, 1, 0);
+        var enddate = current.monthDays();
+        var skipdays = d.getDay()-1;
+        
+        for (i = skipdays+1; i < array.length; i++) {
+            //console.log('happened');
+            //array1[i] = array[i].getElementsByTagName("td");
+
+            if(i-skipdays === enddate+1){
+                  break;
+            }
+            if(array[i].getAttribute('id') === 'selected'){
+                selectedDay = i-skipdays;
+                break;
+            }
+        }
+        console.log('yo', selectedDay);
+        formDate[0].innerHTML = month + " " + selectedDay + " " + year;
+        formDate[1].innerHTML = month + " " + selectedDay + " " + year;
+        getEventAjax();
     }
+    
+document.getElementById('addeventbutton').addEventListener('click', addEventAjax, false);
+
+function addEventAjax(){
+    var username = 'barack';
+    var title = document.getElementById('eventTitle').value;
+    
+    var hour = parseInt(document.getElementById('eventHour').value);
+    var minute = parseInt(document.getElementById('eventMinute').value);
+    
+    
+    var dataString = "username=" + encodeURIComponent(username) + "&title=" + encodeURIComponent(title) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(hour) + "&minute=" +encodeURIComponent(minute);
+    console.log(dataString);
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "Mod5AddEvent.php", true);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    //xmlHttp.addEventListener("load", function(event){
+    //    var jsonData = JSON.parse(event.target.responseText);
+    //}, false);
+    xmlHttp.send(dataString); // Send the data
+    
+    var reload = setInterval(function(){
+        getEventAjax();
+        clearInterval(reload);
+    }, 10);
+    
+}
+
+
+var mylist = document.getElementsByTagName('ul')[0];
+
+function getEventAjax(){
+    $( "ul" ).empty();
+    var username = 'barack';
+    console.log(selectedDay);
+    var dataString = "username=" + encodeURIComponent(username) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year);
+    //console.log(datastring);
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", "Mod5ViewEvent.php", true);
+    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+    xmlHttp.addEventListener("load", function(event){
+        var jsonData = JSON.parse(event.target.responseText);
+        console.log(jsonData);
+        //var mylist = document.getElementsByTagName('ul')[0];
+        console.log(jsonData[0].count);
+        console.log(typeof(jsonData[0].count));
+        for(i = 1; i <= jsonData[0].count; i++){
+            var newLi = document.createElement("li");  // creates a node with the tag name li
+            var a = jsonData[i].title;
+            var b = jsonData[i].hour;
+            var c = jsonData[i].minute;
+            var append = a.concat(": At ", b, " hour " , c, " minute");
+            newLi.appendChild(document.createTextNode(append));
+            mylist.appendChild(newLi);
+        }
+    }, false);
+    xmlHttp.send(dataString); // Send the data
+}
