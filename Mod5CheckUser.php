@@ -1,9 +1,4 @@
-<!DOCTYPE html>
-<html>
-    <head></head>
-        <body>
-            
-        <?php
+<?php
         require 'Mod5Database.php';
         
         $username = (string) $_POST["username"];
@@ -28,21 +23,31 @@
            
             //check to see if there is a user and check to see if the password is correct
             if ($sql_username == $username) {
+                
                 if(password_verify($password, $sql_password)) {
-    
-                    echo "correct password";
+                    $arr = ["success" => true];
+                    header('Content-type: application/json');
+                    echo json_encode( $arr );
+                    
                     session_start();
                     $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(32));
                     $_SESSION['username'] = $username;
                     //go to news
-                    header("Location: Mod5Calendar.php");
                     exit;
+                } else {
+                    $arr = ["success" => false, "message" => "Incorrect Username or Password"];
+                    header('Content-type: application/json');
+                    echo json_encode( $arr );
+                    exit;
+                    
                 }
-            } 
+                
+            }
         }
         $stmt->close();
         
-        header("Location: Mod5Login.php?wronginput=yes");
-        ?>
-        </body>
-</html>
+         $arr = ["success" => false, "message" => "Incorrect Username or Password"];
+                    header('Content-type: application/json');
+                    echo json_encode( $arr );
+                    exit;
+?>
