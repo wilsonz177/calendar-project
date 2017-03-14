@@ -131,6 +131,25 @@
     
 </div>
 
+<div id="eventEdit">
+      <h3>Editing Event: "<span></span>" on <span class="formDate"></span></h3>
+      Edit your Title:<input type ="text" id ='eventEditTitle' value=""/>
+      Edit the time: <select id='eventEditHour'>
+            <?php
+             for($i = 0; $i < 24; $i++){
+                printf("<option value=%s> %s </option>", $i, $i);
+             }
+            ?>
+        </select> hour(s) and <select id='eventEditMinute'>
+            <?php
+             for($i = 0; $i<60; $i+= 15){
+                  printf("<option value=%s> %s </option>", $i, $i);
+             }
+            ?>
+        </select> minute(s)
+      <button type="button" id='editeventbutton'>Submit</button>
+</div>
+
 
 
 <script type="text/javascript" src="CalendarScript.js"></script>
