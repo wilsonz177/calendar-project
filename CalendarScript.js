@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', setup, false);
+document.addEventListener('DOMContentLoaded', initialLoad, false);
     document.getElementById('fwd').addEventListener('click', moveFwd, false);
     document.getElementById('back').addEventListener('click', moveBack, false);
     document.getElementById('addeventbutton').addEventListener('click', addEventAjax, false);
@@ -11,11 +11,19 @@ document.addEventListener('DOMContentLoaded', setup, false);
     var day = current.getDate();
     var year = current.getFullYear();
     var selectedDay = day;
-    console.log(numericMonth);
+    console.log('numeric month', numericMonth);
     var formDate = document.getElementsByClassName('formDate');
     var dayEvents = [];
     var oldEdit = [];
     
+    function initialLoad(){
+        var username = document.getElementById('initial_username').textContent;
+        console.log('username: ', username);
+        if(username === 'Guest'){
+            document.getElementById('everything_but_calendar').style.display = 'none';
+        }
+        setup();
+    }
 
     //EVENT CONSTRUCTOR
     function eventInfo(title, hour, minute, event_id){
@@ -33,7 +41,7 @@ document.addEventListener('DOMContentLoaded', setup, false);
       //if you need to go to the new year
       if(numericMonth === 11){
             current = new Date(year+1, 0, 1, 0);
-            console.log('nextyear');
+            console.log('nextyear:');
       }else{
             current = new Date(year, numericMonth+1, 1, 0);
       }
@@ -50,7 +58,7 @@ document.addEventListener('DOMContentLoaded', setup, false);
       //if you need to go to prev year
       if(numericMonth === 0){
             current = new Date(year-1, 11, 1, 0);
-            console.log('prev year');
+            console.log('prev year:');
       }else{
             current = new Date(year, numericMonth-1, 1, 0);
       }
@@ -185,7 +193,7 @@ document.addEventListener('DOMContentLoaded', setup, false);
                 break;
             }
         }
-        console.log('yo', selectedDay);
+        console.log('new selectedDay:', selectedDay);
         formDate[0].innerHTML = month + " " + selectedDay + " " + year;
         formDate[1].innerHTML = month + " " + selectedDay + " " + year;
         formDate[2].innerHTML = month + " " + selectedDay + " " + year;
@@ -222,21 +230,22 @@ var mylist = document.getElementsByTagName('ul')[0];
 
 function getEventAjax(){
     $( "ul" ).empty(); //clear the day's list of events and the event listeners associated w them
+    dayEvents = [];
     //var username = 'barack';
-    console.log(selectedDay);
+    console.log('selected Day: ', selectedDay);
     //create the data string and send the AJAX request
     var dataString = "month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year);
-    //console.log(datastring);
+    console.log('my datastring: ', dataString);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5ViewEvent.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
     //event listener and function to run when information is received
     xmlHttp.addEventListener("load", function(event){
         var jsonData = JSON.parse(event.target.responseText);
-        console.log(jsonData);
+        console.log('jsonData', jsonData);
         //var mylist = document.getElementsByTagName('ul')[0];
-        console.log(jsonData[0].count);
-        console.log(typeof(jsonData[0].count));
+        console.log('count:', jsonData[0].count);
+        console.log('type of count', typeof(jsonData[0].count));
         for(i = 1; i <= jsonData[0].count; i++){
             var newLi = document.createElement("li");  // creates a node with the tag name li
             dayEvents.push(new eventInfo(jsonData[i].title, jsonData[i].hour, jsonData[i].minute, jsonData[i].event_id)); //creates a eventInfo object and pushes it to the dayEvents array
@@ -278,7 +287,8 @@ function getEventAjax(){
             //add list node to mylist or <ul> tag
             mylist.appendChild(newLi);
         }
-        console.log(dayEvents);
+        console.log('my dayevents array: ', dayEvents);
+        
     }, false);
     xmlHttp.send(dataString); // Send the data
 }
@@ -321,9 +331,14 @@ function displayEventEditor(){
 function editEventAjax(){
     //get the information to send
     //var username = 'barack';
+    //var editTitle = document.getElementById('eventEditTitle').value;
+    //var editHour = parseInt(document.getElementById('eventEditHour').value);
+    //var editMinute = parseInt(document.getElementById('eventEditMinute').value);
+    
     var editTitle = document.getElementById('eventEditTitle').value;
     var editHour = parseInt(document.getElementById('eventEditHour').value);
     var editMinute = parseInt(document.getElementById('eventEditMinute').value);
+    
     var dataString = "oldTitle=" + encodeURIComponent(oldEdit[0]) + "&oldHour=" + encodeURIComponent(oldEdit[1]) + "&oldMinute=" + encodeURIComponent(oldEdit[2]) + "&title=" + encodeURIComponent(editTitle) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5EditEvent.php", true);
