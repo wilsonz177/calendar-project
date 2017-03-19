@@ -39,7 +39,7 @@
         //$temp = "index".$i;
         //$result[$i] = array();
         array_push($result, array());
-        $result[$i]['title'] = $title;
+        $result[$i]['title'] = htmlentities($title); //prevents against Persistent XSS
         $result[$i]['hour'] = $hour;
         $result[$i]['minute'] = $minute;
         $result[0]['count'] = $i;
