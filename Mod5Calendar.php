@@ -18,6 +18,7 @@
 <body><div id="main">
 
 <h1>Welcome to your Janky Calendar</h1>
+
 <div id="calendarBorder">
     <header>
     <button class='fwdbackbutton' id='back'>«</button>

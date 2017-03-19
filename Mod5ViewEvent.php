@@ -2,12 +2,11 @@
 <?php
 
     require 'Mod5Database.php';
-    
-    $username = (string)$_POST['username'];
+    session_start();
+	$username = $_SESSION['username'];
     $month = (int)$_POST['month'];
     $day = (int)$_POST['day'];
     $year = (int)$_POST['year'];
-    
     
     //GET THE USER ID
     $stmt = $mysqli->prepare("select id from users where username=?");
