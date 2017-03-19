@@ -11,7 +11,6 @@ document.addEventListener('DOMContentLoaded', initialLoad, false);
     var day = current.getDate();
     var year = current.getFullYear();
     var selectedDay = day;
-    console.log('numeric month', numericMonth);
     var formDate = document.getElementsByClassName('formDate');
     var dayEvents = [];
     var oldEdit = [];
@@ -284,11 +283,40 @@ function getEventAjax(){
             deleteButton.setAttribute('class', 'deleteButton');
             deleteButton.setAttribute("id", tempID);
             deleteButton.appendChild(document.createTextNode('Delete'));
-            //deleteButton.addEventListener('click', deleteEvent, false);
             newLi.appendChild(deleteButton);
             //add list node to mylist or <ul> tag
             mylist.appendChild(newLi);
+            
+           // var myeventid = dayEvents[i-1].id;
+                        deleteButton.addEventListener('click',
+                                          
+            function(){
+    
+                                        var buttonNum = this.id;
+                                        var event = dayEvents[buttonNum - 1];
+                                        var eid = event.id;
+    
+                                        var dataString = "event_id=" + encodeURIComponent(eid);
+                                        var xmlHttp = new XMLHttpRequest();
+                                        xmlHttp.open("POST", "Mod5DeleteEvent.php", true);
+                                        xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                                        xmlHttp.addEventListener("load", function(event){
+                                        var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+                                        if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+                                            getEventAjax();
+                                        }else{
+                                            alert("You did not delete the event.  "+jsonData.message);
+                                        }
+                                    }, false); // Bind the callback to the load event
+                                        xmlHttp.send(dataString); // Send the data
+            }, false);
+            
+            
+            
+            
         }
+        
+        
         console.log('my dayevents array: ', dayEvents);
         
     }, false);
@@ -352,24 +380,28 @@ function editEventAjax(){
     }, 10);
 }
 
-$("button.deleteButton").click(function() {
-    
-        $.ajax({
-    
-        type : 'POST',
-        url  : 'Mod5DeleteEvent.php',
-        data : { username : 'bar', bar : 'foo' },
-        dataType: "json",
-
-        success : function(response)
-        {
-            if(response.success ===true){
-                window.location.replace("Mod5Calendar.php");
-            }
-            else if (response.success === false){
-               $("#error").html("<b>Wrong Username/Password</b>");
-            }
-        }
-   });
+//$("button.deleteButton").click(function() {
+//    console.log('im deleting');
+//    var eventID = dayEvents[this.id].id;
+//    
+//    
+//        $.ajax({
+//    
+//        type : 'POST',
+//        url  : 'Mod5DeleteEvent.php',
+//        data : {event_id : eventID},
+//        dataType: "json",
+//
+//        success : function(response)
+//        {
+//            if(response.success ===true){
+//                
+//                getEventAjax();
+//            }
+//            else if (response.success === false){
+//               $("#error").html("<b>Couldn't delete the event!</b>");
+//            }
+//        }
+//   });
           
-});
+//});
