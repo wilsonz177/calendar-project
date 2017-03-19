@@ -17,13 +17,14 @@ document.addEventListener('DOMContentLoaded', setup, false);
     var oldEdit = [];
 
     //EVENT CONSTRUCTOR
-    function eventInfo(title, hour, minute){
+    function eventInfo(title, hour, minute, event_id){
         this.title = title;
         this.month = numericMonth;
         this.day = selectedDay;
         this.hour = hour;
         this.minute = minute;
         this.year = year;
+        this.id = event_id;
     }
     
     function moveFwd(){
@@ -235,7 +236,7 @@ function getEventAjax(){
         console.log(typeof(jsonData[0].count));
         for(i = 1; i <= jsonData[0].count; i++){
             var newLi = document.createElement("li");  // creates a node with the tag name li
-            dayEvents.push(new eventInfo(jsonData[i].title, jsonData[i].hour, jsonData[i].minute)); //creates a eventInfo object and pushes it to the dayEvents array
+            dayEvents.push(new eventInfo(jsonData[i].title, jsonData[i].hour, jsonData[i].minute, jsonData[i].event_id)); //creates a eventInfo object and pushes it to the dayEvents array
             
             var span0 = document.createElement("span");
             span0.setAttribute('class', 'spantitle');
