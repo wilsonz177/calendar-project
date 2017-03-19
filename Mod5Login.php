@@ -43,7 +43,7 @@
         
         Or continue as a guest. Note that you won't be able to create your own posts or comment on anything.
         <form name="input" action="Mod5Calendar.php" method="POST">
-                    <input type="hidden" name="username" value="<?php echo session_start();
+                    <input type="hidden" id="guest" name="username" value="<?php echo session_start();
                     $_SESSION['username'] = "Guest"; ?>"/>
                     <input type="button" id="submitGuest" value="Continue as Guest"/>
         </form>

@@ -19,7 +19,7 @@
             
             $stmt->execute();
             $result = $stmt->get_result();
-         
+            
             while($row = $result->fetch_assoc()){
             
                 //check to see if there is a user

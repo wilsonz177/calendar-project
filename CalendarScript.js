@@ -223,6 +223,7 @@ var mylist = document.getElementsByTagName('ul')[0];
 function getEventAjax(){
     $( "ul" ).empty(); //clear the day's list of events and the event listeners associated w them
     //var username = 'barack';
+    dayEvents = [];
     console.log(selectedDay);
     //create the data string and send the AJAX request
     var dataString = "month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year);
@@ -270,10 +271,12 @@ function getEventAjax(){
             editButton.addEventListener('click', displayEventEditor, false);
             newLi.appendChild(editButton);
             var deleteButton = document.createElement("button");
+            var tempID = "" + i;
             deleteButton.setAttribute('type', 'button');
             deleteButton.setAttribute('class', 'deleteButton');
+            deleteButton.setAttribute("id", tempID);
             deleteButton.appendChild(document.createTextNode('Delete'));
-            deleteButton.addEventListener('click', deleteEvent, false);
+            //deleteButton.addEventListener('click', deleteEvent, false);
             newLi.appendChild(deleteButton);
             //add list node to mylist or <ul> tag
             mylist.appendChild(newLi);
@@ -335,7 +338,24 @@ function editEventAjax(){
     }, 10);
 }
 
-
-function deleteEvent(){
+$("button.deleteButton").click(function() {
     
-}
+        $.ajax({
+    
+        type : 'POST',
+        url  : 'Mod5DeleteEvent.php',
+        data : { username : 'bar', bar : 'foo' },
+        dataType: "json",
+
+        success : function(response)
+        {
+            if(response.success ===true){
+                window.location.replace("Mod5Calendar.php");
+            }
+            else if (response.success === false){
+               $("#error").html("<b>Wrong Username/Password</b>");
+            }
+        }
+   });
+          
+});
