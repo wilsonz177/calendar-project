@@ -278,10 +278,13 @@ function getEventAjax(){
             editButton.addEventListener('click', displayEventEditor, false);
             newLi.appendChild(editButton);
             var deleteButton = document.createElement("button");
-            var tempID = "" + i;
+            //var tempID = "" + i;
+            
+            
             deleteButton.setAttribute('type', 'button');
             deleteButton.setAttribute('class', 'deleteButton');
-            deleteButton.setAttribute("id", tempID);
+            //deleteButton.setAttribute("id", tempID);
+            
             deleteButton.appendChild(document.createTextNode('Delete'));
             newLi.appendChild(deleteButton);
             //add list node to mylist or <ul> tag
@@ -376,21 +379,68 @@ function editEventAjax(){
     }, 10);
 }
 
+<<<<<<< HEAD
+//$("#editeventbutton").click(function() {
+//    console.log('hello');
+//    var eventID = dayEvents[this.id].id;
+//    var editTitle = $('#eventEditTitle').val();
+//    var editHour = $('#eventEditHour').val();
+//    var editMinute = $('#eventEditMinute').val();
+//    console.log(editTitle, typeof(editTitle));
+//    console.log(editHour, typeof(editHour));
+//    console.log(editMinute, typeof(editMinute));
+//    
+//    $.ajax({
+//    
+//        type : 'POST',
+//        url  : 'Mod5EditEvent.php',
+//        data : { event_id : eventID, oldTitle : oldEdit[0], oldHour : oldEdit[1], oldMinute : oldEdit[2], newTitle : editTitle, newHour : editHour, newMinute : editMinute },
+//        dataType: "json",
+//
+//        success : function(response)
+//        {
+//            if(response.success === true){
+//                getEventAjax();
+//            }
+//            else if (response.success === false){
+//               $("#error").html("<b>Fail to Edit</b>");
+//            }
+//        }
+//   });
+//});
+//
+//$("button.deleteButton").click(function() {
+=======
 //$("button.deleteButton").click(function() {
 //    console.log('im deleting');
 //    var eventID = dayEvents[this.id].id;
 //    
+>>>>>>> caff04831f34304a1eaf9ed3f1cbe86bff127034
 //    
 //        $.ajax({
 //    
 //        type : 'POST',
 //        url  : 'Mod5DeleteEvent.php',
+<<<<<<< HEAD
+//        data : { username : 'bar', bar : 'foo' },
+=======
 //        data : {event_id : eventID},
+>>>>>>> caff04831f34304a1eaf9ed3f1cbe86bff127034
 //        dataType: "json",
 //
 //        success : function(response)
 //        {
 //            if(response.success ===true){
+<<<<<<< HEAD
+//                window.location.replace("Mod5Calendar.php");
+//            }
+//            else if (response.success === false){
+//               $("#error").html("<b>Wrong Username/Password</b>");
+//            }
+//        }
+//   });
+//          
+=======
 //                
 //                getEventAjax();
 //            }
@@ -400,4 +450,5 @@ function editEventAjax(){
 //        }
 //   });
           
+>>>>>>> caff04831f34304a1eaf9ed3f1cbe86bff127034
 //});

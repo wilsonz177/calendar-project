@@ -2,40 +2,45 @@
 
 require 'Mod5Database.php';
     
+	session_start();
     $username = (string)$_SESSION['username'];
-    $title = (string)$_POST['title'];
-    $month = (int)$_POST['month'];
-    $day = (int)$_POST['day'];
-    $year = (int)$_POST['year'];
-    $hour = (int)$_POST['hour'];
-    $minute = (int)$_POST['minute'];
-    $oldHour = (int)$_POST['oldHour'];
-    $oldMinute = (int)$_POST['oldMinute'];
+    $event = (int)$_POST['event_id'];
+   
     
      
     //GET THE USER ID
     $stmt = $mysqli->prepare("select id from users where username=?");
 	if(!$stmt){
 		printf("Query Prep Failed: %s\n", $mysqli->error);
+		$arr = ["success" => false, "message" => "Couldn't delete event."];
+        header('Content-type: application/json');
+        echo json_encode( $arr );        
 		exit;
 	}
     $stmt->bind_param('s', $username);
     $stmt->execute();
-    $stmt->bind_result($user_id);
+    $stmt->bind_result($id_user);
     $stmt->fetch();
     $stmt->close();
     
-    //edit the row containing the event
-    $stmt = $mysqli->prepare("update events set title=?, hour=?, minute=? where user_id=? and month=? and day=? and year =? and hour =? and minute=?");
-                             
-                             //insert into events (title, user_id, month, day, year, hour, minute)
-                             //select ?, id, ?, ?, ?, ?, ? from users where username=?");
+    //delete the event
+    $stmt = $mysqli->prepare("delete from events where user_id=? and event_id=?");
+
     if(!$stmt){
         printf("Query Prep Failed: %s\n", $mysqli->error);
-        echo $username;
+        $arr = ["success" => false, "message" => "Couldn't delete event."];
+        header('Content-type: application/json');
+        echo json_encode( $arr );
         exit;
     }
-    $stmt->bind_param('siiiiiiii', $title, $hour, $minute, $user_id, $month, $day, $year, $oldHour, $oldMinute);
+	
+	
+    $stmt->bind_param('si', $id_user, $event);
     $stmt->execute();
-    $stmt->close(); 
+    $stmt->close();
+	
+	$arr = ["success" => true];
+    header('Content-type: application/json');
+    echo json_encode( $arr );
+	exit;
 ?>
