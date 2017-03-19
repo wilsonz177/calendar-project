@@ -29,7 +29,18 @@
                     header('Content-type: application/json');
                     echo json_encode( $arr );
                     
+                    ini_set("session.cookie_httponly", 1); //disables cookies
                     session_start();
+                    
+                    $previous_ua = @$_SESSION['useragent']; //user agent consistency
+                    $current_ua = $_SERVER['HTTP_USER_AGENT'];
+                         
+                    if(isset($_SESSION['useragent']) && $previous_ua !== $current_ua){
+                        die("Session hijack detected");
+                    }else{
+                        $_SESSION['useragent'] = $current_ua;
+                    }
+                    
                     $_SESSION['token'] = bin2hex(openssl_random_pseudo_bytes(32));
                     $_SESSION['username'] = $username;
                     //go to news
