@@ -151,6 +151,7 @@
             ?>
         </select> minute(s)
       <button type="button" id='editeventbutton'>Submit</button>
+      <span id='someID'></span>
 </div>
 
 

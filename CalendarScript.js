@@ -279,10 +279,13 @@ function getEventAjax(){
             editButton.addEventListener('click', displayEventEditor, false);
             newLi.appendChild(editButton);
             var deleteButton = document.createElement("button");
-            var tempID = "" + i;
+            //var tempID = "" + i;
+            
+            
             deleteButton.setAttribute('type', 'button');
             deleteButton.setAttribute('class', 'deleteButton');
-            deleteButton.setAttribute("id", tempID);
+            //deleteButton.setAttribute("id", tempID);
+            
             deleteButton.appendChild(document.createTextNode('Delete'));
             //deleteButton.addEventListener('click', deleteEvent, false);
             newLi.appendChild(deleteButton);
@@ -297,6 +300,7 @@ function getEventAjax(){
 
 function displayEventEditor(){
     console.log('pressed');
+    oldEdit = [];
     //show the event Edit portion of the page
     document.getElementById('eventEdit').style.display = 'block';
    
@@ -327,21 +331,16 @@ function displayEventEditor(){
             minuteOptions[i].setAttribute('selected', 'selected');
         }
     }
-    oldEdit = [tempTitle, tempHour, tempMinute]; 
+    oldEdit = [tempTitle, tempHour, tempMinute];
 }
 
 function editEventAjax(){
     //get the information to send
     //var username = 'barack';
-    //var editTitle = document.getElementById('eventEditTitle').value;
-    //var editHour = parseInt(document.getElementById('eventEditHour').value);
-    //var editMinute = parseInt(document.getElementById('eventEditMinute').value);
-    
     var editTitle = document.getElementById('eventEditTitle').value;
     var editHour = parseInt(document.getElementById('eventEditHour').value);
     var editMinute = parseInt(document.getElementById('eventEditMinute').value);
-    
-    var dataString = "oldTitle=" + encodeURIComponent(oldEdit[0]) + "&oldHour=" + encodeURIComponent(oldEdit[1]) + "&oldMinute=" + encodeURIComponent(oldEdit[2]) + "&title=" + encodeURIComponent(editTitle) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
+    var dataString = "event_id" + encodeURIComponent() + "&oldTitle=" + encodeURIComponent(oldEdit[0]) + "&oldHour=" + encodeURIComponent(oldEdit[1]) + "&oldMinute=" + encodeURIComponent(oldEdit[2]) + "&title=" + encodeURIComponent(editTitle) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5EditEvent.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -352,24 +351,53 @@ function editEventAjax(){
     }, 10);
 }
 
-$("button.deleteButton").click(function() {
-    
-        $.ajax({
-    
-        type : 'POST',
-        url  : 'Mod5DeleteEvent.php',
-        data : { username : 'bar', bar : 'foo' },
-        dataType: "json",
-
-        success : function(response)
-        {
-            if(response.success ===true){
-                window.location.replace("Mod5Calendar.php");
-            }
-            else if (response.success === false){
-               $("#error").html("<b>Wrong Username/Password</b>");
-            }
-        }
-   });
-          
-});
+//$("#editeventbutton").click(function() {
+//    console.log('hello');
+//    var eventID = dayEvents[this.id].id;
+//    var editTitle = $('#eventEditTitle').val();
+//    var editHour = $('#eventEditHour').val();
+//    var editMinute = $('#eventEditMinute').val();
+//    console.log(editTitle, typeof(editTitle));
+//    console.log(editHour, typeof(editHour));
+//    console.log(editMinute, typeof(editMinute));
+//    
+//    $.ajax({
+//    
+//        type : 'POST',
+//        url  : 'Mod5EditEvent.php',
+//        data : { event_id : eventID, oldTitle : oldEdit[0], oldHour : oldEdit[1], oldMinute : oldEdit[2], newTitle : editTitle, newHour : editHour, newMinute : editMinute },
+//        dataType: "json",
+//
+//        success : function(response)
+//        {
+//            if(response.success === true){
+//                getEventAjax();
+//            }
+//            else if (response.success === false){
+//               $("#error").html("<b>Fail to Edit</b>");
+//            }
+//        }
+//   });
+//});
+//
+//$("button.deleteButton").click(function() {
+//    
+//        $.ajax({
+//    
+//        type : 'POST',
+//        url  : 'Mod5DeleteEvent.php',
+//        data : { username : 'bar', bar : 'foo' },
+//        dataType: "json",
+//
+//        success : function(response)
+//        {
+//            if(response.success ===true){
+//                window.location.replace("Mod5Calendar.php");
+//            }
+//            else if (response.success === false){
+//               $("#error").html("<b>Wrong Username/Password</b>");
+//            }
+//        }
+//   });
+//          
+//});
