@@ -243,7 +243,7 @@ function getEventAjax(){
     console.log(selectedDay);
     console.log('getEventAjax filter Tag:', filterTag);
     //create the data string and send the AJAX request
-    var dataString = "filterTag=" + encodeURIComponent(filterTag) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year);
+    var dataString = "filterTag=" + encodeURIComponent(filterTag) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&whosecalendar=" + encodeURIComponent(switchToThisCalendar);
     console.log('my datastring: ', dataString);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5ViewEvent.php", true);
@@ -313,46 +313,37 @@ function getEventAjax(){
                 deleteButton.setAttribute("id", tempID);
                 deleteButton.appendChild(document.createTextNode('Delete'));
                 newLi.appendChild(deleteButton);
-                //add list node to mylist or <ul> tag
-                //mylist.appendChild(newLi);
-            
-           
-            
-            
-                        
-           // var myeventid = dayEvents[i-1].id;
-                        deleteButton.addEventListener('click',
-                                          
-            function(){
+   
+                
     
                 deleteButton.addEventListener('click',
                                               
-                function(){
-        
-                    var buttonNum = this.id;
-                    var event = dayEvents[buttonNum - 1];
-                    var eid = event.id;
-        
-                    var dataString = "event_id=" + encodeURIComponent(eid);
-                    var xmlHttp = new XMLHttpRequest();
-                    xmlHttp.open("POST", "Mod5DeleteEvent.php", true);
-                    xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-                    xmlHttp.addEventListener("load", function(event){
-                    var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
-                    if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
-                        getEventAjax();
-                    }else{
-                        alert("You did not delete the event.  "+jsonData.message);
-                    }
-                    }, false); // Bind the callback to the load event
-                        xmlHttp.send(dataString); // Send the data
-                }, false);
-            }
-             mylist.appendChild(newLi);
+                    function(){
+            
+                        var buttonNum = this.id;
+                        var event = dayEvents[buttonNum - 1];
+                        var eid = event.id;
+            
+                        var dataString = "event_id=" + encodeURIComponent(eid);
+                        var xmlHttp = new XMLHttpRequest();
+                        xmlHttp.open("POST", "Mod5DeleteEvent.php", true);
+                        xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xmlHttp.addEventListener("load", function(event){
+                            var jsonData = JSON.parse(event.target.responseText); // parse the JSON into a JavaScript object
+                            if(jsonData.success){  // in PHP, this was the "success" key in the associative array; in JavaScript, it's the .success property of jsonData
+                                getEventAjax();
+                            }else{
+                                alert("You did not delete the event.  "+jsonData.message);
+                            }
+                        }, false); // Bind the callback to the load event
+                                xmlHttp.send(dataString); // Send the data
+                    }, false);
+            
+            
         }
-        
+        mylist.appendChild(newLi);
         console.log('my dayevents array: ', dayEvents);
-        
+        }
     }, false);
     xmlHttp.send(dataString); // Send the data
 }
