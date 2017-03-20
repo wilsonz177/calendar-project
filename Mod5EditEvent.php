@@ -4,13 +4,9 @@ require 'Mod5Database.php';
     session_start();
     $username = $_SESSION['username'];
     $title = (string)$_POST['title'];
-    $month = (int)$_POST['month'];
-    $day = (int)$_POST['day'];
-    $year = (int)$_POST['year'];
     $hour = (int)$_POST['hour'];
     $minute = (int)$_POST['minute'];
-    $oldHour = (int)$_POST['oldHour'];
-    $oldMinute = (int)$_POST['oldMinute'];
+	$event_id = (int)$_POST['event_id'];
     
      
     //GET THE USER ID
@@ -26,7 +22,7 @@ require 'Mod5Database.php';
     $stmt->close();
     
     //edit the row containing the event
-    $stmt = $mysqli->prepare("update events set title=?, hour=?, minute=? where user_id=? and month=? and day=? and year =? and hour =? and minute=?");
+    $stmt = $mysqli->prepare("update events set title=?, hour=?, minute=? where user_id=? and event_id=?");
                              
                              //insert into events (title, user_id, month, day, year, hour, minute)
                              //select ?, id, ?, ?, ?, ?, ? from users where username=?");
@@ -35,7 +31,7 @@ require 'Mod5Database.php';
         echo $username;
         exit;
     }
-    $stmt->bind_param('siiiiiiii', $title, $hour, $minute, $user_id, $month, $day, $year, $oldHour, $oldMinute);
+    $stmt->bind_param('siiii', $title, $hour, $minute, $user_id, $event_id);
     $stmt->execute();
     $stmt->close(); 
 ?>

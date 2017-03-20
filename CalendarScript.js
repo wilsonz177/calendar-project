@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', initialLoad, false);
     var formDate = document.getElementsByClassName('formDate');
     var dayEvents = [];
     var oldEdit = [];
+    var selectedEventID;
     
     function initialLoad(){
         var username = document.getElementById('initial_username').textContent;
@@ -268,6 +269,11 @@ function getEventAjax(){
             newLi.appendChild(span2);
             newLi.appendChild(document.createTextNode(" minute"));
             
+            var span3 = document.createElement("span");
+            span3.setAttribute('class', 'eventID');
+            span3.innerHTML = dayEvents[i-1].id;
+            newLi.appendChild(span3);
+            
             
             
             //adding edit and delete buttons to list node and adding event listeners
@@ -325,14 +331,15 @@ function getEventAjax(){
 
 function displayEventEditor(){
     console.log('pressed');
-    oldEdit = [];
+    //oldEdit = [];
     //show the event Edit portion of the page
     document.getElementById('eventEdit').style.display = 'block';
    
    // fill the edit portion with the correct information pertaining to the event
    
     var spanArray = event.target.parentNode.getElementsByTagName('span'); //this holds the title, hour, & minute
-    
+    console.log(event.target.parentNode);
+    console.log('spanarray: ', spanArray);
     var yo = document.getElementById('eventEdit').getElementsByTagName('h3')[0].getElementsByTagName('span')[0]; //fill the title of h3
     var tempTitle = spanArray[0].textContent;
     yo.innerHTML =  tempTitle;
@@ -356,7 +363,10 @@ function displayEventEditor(){
             minuteOptions[i].setAttribute('selected', 'selected');
         }
     }
-    oldEdit = [tempTitle, tempHour, tempMinute];
+    //fill the array with the old edits so you know how to find them?
+    //oldEdit = [tempTitle, tempHour, tempMinute];
+    selectedEventID = parseInt(spanArray[3].textContent);
+    console.log('selectedEventID: ' ,selectedEventID);
 }
 
 function editEventAjax(){
@@ -365,7 +375,9 @@ function editEventAjax(){
     var editTitle = document.getElementById('eventEditTitle').value;
     var editHour = parseInt(document.getElementById('eventEditHour').value);
     var editMinute = parseInt(document.getElementById('eventEditMinute').value);
-    var dataString = "event_id" + encodeURIComponent() + "&oldTitle=" + encodeURIComponent(oldEdit[0]) + "&oldHour=" + encodeURIComponent(oldEdit[1]) + "&oldMinute=" + encodeURIComponent(oldEdit[2]) + "&title=" + encodeURIComponent(editTitle) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
+    
+    
+    var dataString = "event_id=" + encodeURIComponent(selectedEventID) +  "&title=" + encodeURIComponent(editTitle) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5EditEvent.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");

@@ -89,3 +89,7 @@ body {
     #someID{
       display: none;
     }
+    
+    .eventID{
+      display: none;
+    }
