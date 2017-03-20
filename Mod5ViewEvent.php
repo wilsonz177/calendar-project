@@ -7,6 +7,9 @@
     $month = (int)$_POST['month'];
     $day = (int)$_POST['day'];
     $year = (int)$_POST['year'];
+	$filterTag = (string)$_POST['filterTag'];
+	
+	
     
     //GET THE USER ID
     $stmt = $mysqli->prepare("select id from users where username=?");
@@ -21,14 +24,25 @@
     $stmt->close();
     
     //get the day's events
-    $stmt = $mysqli->prepare("select title, hour, minute, event_id from events where user_id=? and month=? and day=? and year=? order by hour");
-    if(!$stmt){
-        printf("Query Prep Failed: %s\n", $mysqli->error);
-        exit;
-    }
-    $stmt->bind_param('iiii', $user_id, $month, $day, $year);
+	
+	if($filterTag === ""){
+		$stmt = $mysqli->prepare("select title, hour, minute, event_id, tag from events where user_id=? and month=? and day=? and year=? order by hour, minute");
+		if(!$stmt){
+			printf("Query Prep Failed: %s\n", $mysqli->error);
+			exit;
+		}
+		$stmt->bind_param('iiii', $user_id, $month, $day, $year);
+	}else{
+		$stmt = $mysqli->prepare("select title, hour, minute, event_id, tag from events where user_id=? and month=? and day=? and year=? and tag=? order by hour, minute");
+		if(!$stmt){
+			printf("Query Prep Failed: %s\n", $mysqli->error);
+			exit;
+		}
+		$stmt->bind_param('iiiis', $user_id, $month, $day, $year, $filterTag);
+	}
+	
     $stmt->execute();
-    $stmt->bind_result($title, $hour, $minute, $event_id);
+    $stmt->bind_result($title, $hour, $minute, $event_id, $tag);
     
     $result = array();
 	
@@ -45,6 +59,7 @@
         $result[$i]['hour'] = $hour;
         $result[$i]['minute'] = $minute;
 		$result[$i]['event_id'] = $event_id;
+		$result[$i]['tag'] = $tag;
         $result[0]['count'] = $i;
         $i++;
     }

@@ -12,19 +12,20 @@
     $year = (int)$_POST['year'];
     $hour = (int)$_POST['hour'];
     $minute = (int)$_POST['minute'];
+    $tag = (string)$_POST['tag'];
     
     
     
     
     
-    $stmt = $mysqli->prepare("insert into events (title, user_id, month, day, year, hour, minute)
-                             select ?, id, ?, ?, ?, ?, ? from users where username=?");
+    $stmt = $mysqli->prepare("insert into events (title, user_id, month, day, year, hour, minute, tag)
+                             select ?, id, ?, ?, ?, ?, ?, ? from users where username=?");
     if(!$stmt){
         printf("Query Prep Failed: %s\n", $mysqli->error);
         echo $username;
         exit;
     }
-    $stmt->bind_param('siiiiis', $title, $month, $day, $year, $hour, $minute, $username);
+    $stmt->bind_param('siiiiiss', $title, $month, $day, $year, $hour, $minute, $tag, $username);
     $stmt->execute();
     $stmt->close();
     
