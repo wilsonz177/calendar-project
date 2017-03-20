@@ -4,7 +4,6 @@
 <title>My Calendar</title>
 <link rel="stylesheet" type="text/css"  href="CalendarStyles.css"/>
 
-    
 <!--**CITATION/SOURCES
  *
  * Calendar design partly from: http://www.java2s.com/Code/HTMLCSS/CSS-Controls/Calendarwithtable.htm
@@ -12,7 +11,7 @@
  *
  *function for finding end date of a month: https://stackoverflow.com/questions/1184334/get-number-days-in-a-specified-month-using-javascript
  -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 
 <body><div id="main">
@@ -135,6 +134,37 @@
         <button type="button" id='addeventbutton'>Submit</button>
     
 </div>
+
+<!--button for sharing calendar-->
+<div id='shareCalendar'> 
+      <h3>Share your calendar with (type username)</h3>
+   
+        Title: <input type ="text" id ='sharedUser'/>
+        <button type="button" id='sharebutton'>Share </button>
+</div>
+
+<!--dropdown options to choose another, already-shared calendar-->
+<div id='myCalendars'> 
+      <h3>or switch to another calendar!</h3>
+   
+      <select id='pickCalendar'>
+            <?php
+            session_start();
+            $calendars = $_SESSION["sharedcalendars"];
+            $username = $_SESSION["username"];
+            $s = count($calendars);
+            printf("<option value=%s> %s </option>", $username, $username);
+             for($i = 0; $i < $s; $i++){
+                printf("<option value=%s> %s </option>", $calendars[$i], $calendars[$i]);
+             }
+             
+            ?>
+        </select>
+      <button type="button" id='switchCalendar'>Switch</button>
+</div>
+
+
+
 
 <div id="eventEdit">
       <h3>Editing Event: "<span></span>" on <span class="formDate"></span></h3>

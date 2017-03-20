@@ -1,5 +1,5 @@
 $('document').ready(function(){
-    $("#submitLogin").click(function(){
+    $("#submitLogin").click(function(){ //checks login info
 
         var data = $("#login-form").serialize();
         $.ajax({
@@ -21,7 +21,7 @@ $('document').ready(function(){
    });
 });
     
-     $("#submitNewUser").click(function(){
+     $("#submitNewUser").click(function(){ //adds new user
         
         var data = $("#new-user-form").serialize();
         $.ajax({
@@ -43,7 +43,7 @@ $('document').ready(function(){
    });
 });
      
-     $("#submitGuest").click(function(){
+     $("#submitGuest").click(function(){ //guest functionality
         
    window.location.replace("Mod5Calendar.php");
 });

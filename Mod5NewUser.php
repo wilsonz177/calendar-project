@@ -28,7 +28,6 @@
                     $arr = ["success" => false, "message" => "Incorrect Username or Password"];
                     header('Content-type: application/json');
                     echo json_encode( $arr );
-                  
                     exit;
                 } 
             }
@@ -47,9 +46,9 @@
             $stmt->execute();
             $stmt->close();
             
-                    $arr = ["success" => true];
-                   header('Content-type: application/json');
-                    echo json_encode( $arr );
+            $arr = ["success" => true];
+            header('Content-type: application/json');
+            echo json_encode( $arr );
 
                
             //creates a new session and token
@@ -57,7 +56,6 @@
             session_start();
             $previous_ua = @$_SESSION['useragent']; //user agent consistency
             $current_ua = $_SERVER['HTTP_USER_AGENT'];
-             
             if(isset($_SESSION['useragent']) && $previous_ua !== $current_ua){
                         die("Session hijack detected");
             }else{
