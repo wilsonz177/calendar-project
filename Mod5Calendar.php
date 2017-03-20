@@ -104,6 +104,10 @@
 
 <div>
 <h3> Events for <span class='formDate'></span></h3>
+Filter by Tags: 
+<input type ="text" id ='filterTag'/>
+<button type="button" id='filterbutton'>Filter</button>
+<button type="button" id='resetFilter'>Remove Filter</button>
 <ul>
       
 </ul>
@@ -115,7 +119,7 @@
 <div id='eventcreator'>
       <h3>Enter an event for <span class='formDate'></span></h3>
    
-        Title: <input type ="text" id ='eventTitle'/>
+        Title: <input type ="text" id ='eventTitle'/><br><br>
         Hour: <select id='eventHour'>
             <?php
              for($i = 0; $i < 24; $i++){
@@ -129,8 +133,10 @@
                   printf("<option value=%s> %s </option>", $i, $i);
              }
             ?>
-        </select>
+        </select><br><br>
         
+        Optional Tag: <input type="text" id="eventTag"/>
+        <br><br>
         <button type="button" id='addeventbutton'>Submit</button>
     
 </div>
@@ -168,7 +174,7 @@
 
 <div id="eventEdit">
       <h3>Editing Event: "<span></span>" on <span class="formDate"></span></h3>
-      Edit your Title:<input type ="text" id ='eventEditTitle' value=""/>
+      Edit your Title:<input type ="text" id ='eventEditTitle' value=""/><br><br>
       Edit the time: <select id='eventEditHour'>
             <?php
              for($i = 0; $i < 24; $i++){
@@ -181,7 +187,8 @@
                   printf("<option value=%s> %s </option>", $i, $i);
              }
             ?>
-        </select> minute(s)
+        </select> minute(s) <br><br>
+    Edit the Tag:  <input type="text" id="eventEditTag"/><br><br>
       <button type="button" id='editeventbutton'>Submit</button>
       <span id='someID'></span>
 </div>

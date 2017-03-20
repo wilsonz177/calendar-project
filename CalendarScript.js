@@ -3,6 +3,8 @@
     document.getElementById('back').addEventListener('click', moveBack, false);
     document.getElementById('addeventbutton').addEventListener('click', addEventAjax, false);
     document.getElementById('editeventbutton').addEventListener('click', editEventAjax, false);
+    document.getElementById('filterbutton').addEventListener('click', filterEvents, false);
+    document.getElementById('resetFilter').addEventListener('click', resetFilter, false);
     document.getElementById('sharebutton').addEventListener('click', shareCalendar, false); //eventlistener for sharing
     document.getElementById('switchCalendar').addEventListener('click', switchCal, false);
     
@@ -15,8 +17,10 @@
     var selectedDay = day;
     var formDate = document.getElementsByClassName('formDate');
     var dayEvents = [];
-    var oldEdit = [];
+ 
     var selectedEventID;
+    var filterTag = "";
+    console.log('filtertag info', filterTag, typeof(filterTag));
     
     function initialLoad(){
         var username = document.getElementById('initial_username').textContent;
@@ -28,7 +32,7 @@
     }
 
     //EVENT CONSTRUCTOR
-    function eventInfo(title, hour, minute, event_id){
+    function eventInfo(title, hour, minute, event_id, event_tag){
         this.title = title;
         this.month = numericMonth;
         this.day = selectedDay;
@@ -36,6 +40,7 @@
         this.minute = minute;
         this.year = year;
         this.id = event_id;
+        this.tag = event_tag;
     }
     
     function shareCalendar(){
@@ -208,12 +213,14 @@
     
     function addEventAjax(){
     var title = document.getElementById('eventTitle').value;
-    
+    var tag = document.getElementById('eventTag').value;
+    console.log('NEWeventTag', tag, typeof(tag));
     var hour = parseInt(document.getElementById('eventHour').value);
     var minute = parseInt(document.getElementById('eventMinute').value);
     
     
-    var dataString = "title=" + encodeURIComponent(title) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(hour) + "&minute=" +encodeURIComponent(minute);
+    var dataString = "tag=" + encodeURIComponent(tag) + "&title=" + encodeURIComponent(title) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&hour=" + encodeURIComponent(hour) + "&minute=" +encodeURIComponent(minute);
+    console.log(dataString);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5AddEvent.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -233,8 +240,11 @@ function getEventAjax(){
     $( "ul" ).empty(); //clear the day's list of events and the event listeners associated w them
     var switchToThisCalendar = document.getElementById('pickCalendar').value;
     dayEvents = [];
+    console.log(selectedDay);
+    console.log('getEventAjax filter Tag:', filterTag);
     //create the data string and send the AJAX request
-    var dataString = "month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year) + "&whosecalendar=" + encodeURIComponent(switchToThisCalendar);
+    var dataString = "filterTag=" + encodeURIComponent(filterTag) + "&month=" + encodeURIComponent(numericMonth) + "&day=" + encodeURIComponent(selectedDay) + "&year=" + encodeURIComponent(year);
+    console.log('my datastring: ', dataString);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5ViewEvent.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -254,8 +264,8 @@ function getEventAjax(){
         
         for(i = 1; i <= jsonData[0].count; i++){
             var newLi = document.createElement("li");  // creates a node with the tag name li
-            dayEvents.push(new eventInfo(jsonData[i].title, jsonData[i].hour, jsonData[i].minute, jsonData[i].event_id)); //creates a eventInfo object and pushes it to the dayEvents array
-            console.log('begin');
+            dayEvents.push(new eventInfo(jsonData[i].title, jsonData[i].hour, jsonData[i].minute, jsonData[i].event_id, jsonData[i].tag)); //creates a eventInfo object and pushes it to the dayEvents array
+            
             var span0 = document.createElement("span");
             span0.setAttribute('class', 'spantitle');
             span0.innerHTML = dayEvents[i-1].title;
@@ -273,13 +283,20 @@ function getEventAjax(){
             span2.setAttribute('class', 'spanminute');
             span2.innerHTML = dayEvents[i-1].minute;
             newLi.appendChild(span2);
-            newLi.appendChild(document.createTextNode(" minute"));
+            newLi.appendChild(document.createTextNode(" minute,   Tag: #"));
+            
+            
             
             var span3 = document.createElement("span");
-            span3.setAttribute('class', 'eventID');
-            span3.innerHTML = dayEvents[i-1].id;
+            span3.setAttribute('class', 'spanTag');
+            span3.innerHTML = dayEvents[i-1].tag;
             newLi.appendChild(span3);
             
+			var span4 = document.createElement("span");
+            span4.setAttribute('class', 'eventID');
+            span4.innerHTML = dayEvents[i-1].id;
+            newLi.appendChild(span4);
+
             console.log('end');
                 if (jsonData[0]['showAll'] === true){
                 //adding edit and delete buttons to list node and adding event listeners
@@ -298,6 +315,15 @@ function getEventAjax(){
                 newLi.appendChild(deleteButton);
                 //add list node to mylist or <ul> tag
                 //mylist.appendChild(newLi);
+            
+           
+            
+            
+                        
+           // var myeventid = dayEvents[i-1].id;
+                        deleteButton.addEventListener('click',
+                                          
+            function(){
     
                 deleteButton.addEventListener('click',
                                               
@@ -347,26 +373,40 @@ function displayEventEditor(){
     
     document.getElementById('eventEditTitle').setAttribute('value', spanArray[0].textContent); //fill the input with title
     
+    //fill the tag in 
+    var tempTag = spanArray[3].textContent;
+    document.getElementById('eventEditTag').setAttribute('value', tempTag);
+    
     //fill the select tags with the right information
     var tempHour = parseInt(spanArray[1].textContent);
     var tempMinute = parseInt(spanArray[2].textContent);
+    console.log('temphour:', tempHour, tempMinute);
     var hourOptions = document.getElementById('eventEditHour').getElementsByTagName('option');
+    console.log('houroptions', hourOptions);
     var minuteOptions = document.getElementById('eventEditMinute').getElementsByTagName('option');
+    console.log('minoptions', minuteOptions);
     for(i = 0; i < hourOptions.length; i++){
        var a = parseInt(hourOptions[i].value);
-        if(a === tempHour){
+       console.log(a);
+        if(a == tempHour){
             hourOptions[i].setAttribute('selected', 'selected');
+            console.log('hour happend');
+            break;
         }
     }
     for(i = 0; i < minuteOptions.length; i++){
        var b = parseInt(minuteOptions[i].value);
-        if(b === tempMinute){
+       console.log(b);
+        if(b == tempMinute){
             minuteOptions[i].setAttribute('selected', 'selected');
+            console.log('min happened');
+            break;
         }
     }
     //fill the array with the old edits so you know how to find them?
     //oldEdit = [tempTitle, tempHour, tempMinute];
-    selectedEventID = parseInt(spanArray[3].textContent);
+    selectedEventID = parseInt(spanArray[4].textContent);
+    console.log('selectedEventID: ' ,selectedEventID);
 }
 
 function editEventAjax(){
@@ -374,9 +414,9 @@ function editEventAjax(){
     var editTitle = document.getElementById('eventEditTitle').value;
     var editHour = parseInt(document.getElementById('eventEditHour').value);
     var editMinute = parseInt(document.getElementById('eventEditMinute').value);
+    var editTag = document.getElementById('eventEditTag').value;
     
-    
-    var dataString = "event_id=" + encodeURIComponent(selectedEventID) +  "&title=" + encodeURIComponent(editTitle) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
+    var dataString =  "event_tag=" + encodeURIComponent(editTag) + "&event_id=" + encodeURIComponent(selectedEventID) +  "&title=" + encodeURIComponent(editTitle) + "&hour=" + encodeURIComponent(editHour) + "&minute=" +encodeURIComponent(editMinute);
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", "Mod5EditEvent.php", true);
     xmlHttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
@@ -385,4 +425,15 @@ function editEventAjax(){
         getEventAjax();
         clearInterval(reload);
     }, 10);
+}
+
+function filterEvents(){
+    filterTag = document.getElementById('filterTag').value;
+    getEventAjax();
+    
+}
+
+function resetFilter(){
+    filterTag = "";
+    getEventAjax();
 }
