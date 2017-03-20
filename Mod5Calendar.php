@@ -17,7 +17,7 @@
 
 <body><div id="main">
 
-<h1>Welcome to your Janky Calendar</h1>
+<h1>Welcome to <span id="initial_username"><?php session_start(); echo $_SESSION['username']; ?></span>'s Janky Calendar</h1>
 
 <div id="calendarBorder">
     <header>
@@ -100,12 +100,16 @@
 </div>
 <br>
 
+<div id='everything_but_calendar'>
+
+
 <div>
 <h3> Events for <span class='formDate'></span></h3>
 <ul>
       
 </ul>
 </div>
+
 
 
 <br>
@@ -152,6 +156,7 @@
       <span id='someID'></span>
 </div>
 
+</div>
 
 
 <script type="text/javascript" src="CalendarScript.js"></script>
